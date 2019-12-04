@@ -27,7 +27,8 @@
     <body>
         <div id="app">
             <h1>
-                This is Flutter WebView Javascript Channel
+                Flutter WebView Javascript Channel
+                <small>v 1.0.1</small>
             </h1>
             <div class="row">
                 <div class="col">
@@ -41,7 +42,7 @@
                         </div>
                         <div class="panel">
                             <h3>隨機數產生請求</h3>
-                            <input v-model="rand.max" />
+                            <input type="number" min="10" v-model="rand.max" />
                             <button @click="onCallRandom">Call Random</button>
                             <p>
                                 <label>

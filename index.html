@@ -16,25 +16,31 @@
             .col {
                 flex: 1;
             }
+            .panel {
+                border: 1px solid #ccc;
+                margin-bottom: 20px;
+                padding: 10px;
+            }
         </style>
-        <script src="/vue.min.js"></script>
+        <script src="./vue.min.js"></script>
     </head>
     <body>
         <div id="app">
+            <h1>
+                This is Flutter WebView Javascript Channel
+            </h1>
             <div class="row">
                 <div class="col">
-                    <button @click="onReload">Reload</button>
-                    <h4>This is Flutter WebView Javascript Channel</h4>
                     <div v-if="!hasFApp">
                         No FApp Object
                     </div>
                     <div v-else>
-                        <div>
+                        <div class="panel">
+                            <h3>返回請求</h3>
                             <button @click="onBack">Back</button>
                         </div>
-
-                        <hr />
-                        <div>
+                        <div class="panel">
+                            <h3>隨機數產生請求</h3>
                             <input v-model="rand.max" />
                             <button @click="onCallRandom">Call Random</button>
                             <p>
@@ -44,15 +50,20 @@
                             </p>
                         </div>
                     </div>
+                    <button @click="onReload">頁面重載</button>
                 </div>
                 <div class="col">
-                    <p v-for="(msg, i) in logs" :key="i">
-                        {{ msg }}
-                    </p>
+                    <div class="panel">
+                        <h4>Vue Lifecycle</h4>
+                        <p v-for="(msg, i) in logs" :key="i">
+                            {{ msg }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
         <script>
+            var FApp = true;
             new Vue({
                 data: {
                     logs: [],
@@ -62,6 +73,9 @@
                     }
                 },
                 computed: {
+                    currentUrl() {
+                        return location.href;
+                    },
                     hasFApp() {
                         return window.FApp ? true : false;
                     }

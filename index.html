@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                position: relative;
+            }
+            .row {
+                display: flex;
+            }
+            .col {
+                flex: 1;
+            }
+        </style>
+        <script src="/vue.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <div class="row">
+                <div class="col">
+                    <button @click="onReload">Reload</button>
+                    <h4>This is Flutter WebView Javascript Channel</h4>
+                    <div v-if="!hasFApp">
+                        No FApp Object
+                    </div>
+                    <div v-else>
+                        <div>
+                            <button @click="onBack">Back</button>
+                        </div>
+
+                        <hr />
+                        <div>
+                            <input v-model="rand.max" />
+                            <button @click="onCallRandom">Call Random</button>
+                            <p>
+                                <label>
+                                    GET Random Value = {{ rand.value }}</label
+                                >
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <p v-for="(msg, i) in logs" :key="i">
+                        {{ msg }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <script>
+            new Vue({
+                data: {
+                    logs: [],
+                    rand: {
+                        max: 100,
+                        value: 0
+                    }
+                },
+                computed: {
+                    hasFApp() {
+                        return window.FApp ? true : false;
+                    }
+                },
+                created() {
+                    this.logs.push("lifecycle - created");
+                },
+                mounted() {
+                    this.logs.push("lifecycle - mounted");
+                    window.onFApp = (name, data) => {
+                        alert(name);
+                        switch (name) {
+                            case "rand":
+                                this.rand.value = data.value;
+                                break;
+                        }
+                    };
+                },
+                methods: {
+                    emitFApp(name, data) {
+                        if (!window.FApp) {
+                            return;
+                        }
+
+                        window.FApp.postMessage(
+                            JSON.stringify({
+                                name,
+                                data: data || null
+                            })
+                        );
+                    },
+                    onReload() {
+                        window.location.reload();
+                    },
+                    onBack() {
+                        this.emitFApp("back");
+                    },
+                    onCallRandom() {
+                        this.emitFApp("rand", { max: this.rand.max });
+                    }
+                }
+            }).$mount("#app");
+        </script>
+    </body>
+</html>
